@@ -30,6 +30,7 @@ import Header from './components/Header';
 // Assignments
 import Turo from './pages/Turo';
 import DaisyUi from './pages/DaisyUi';
+import CounterApp from './pages/CounterApp'
 
 const App = () => {
   return (
@@ -48,6 +49,10 @@ const App = () => {
         <Route
           path='/daisy-ui'
           element={<DaisyUi/>}
+        />
+        <Route 
+          path='/counter-app'
+          element={<CounterApp/>}
         />
       </Routes>
     </BrowserRouter>
