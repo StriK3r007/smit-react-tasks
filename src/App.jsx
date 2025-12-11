@@ -31,6 +31,7 @@ import Header from './components/Header';
 import Turo from './pages/Turo';
 import DaisyUi from './pages/DaisyUi';
 import CounterApp from './pages/CounterApp'
+import BootstrapUi from './pages/BootstrapUi';
 
 const App = () => {
   return (
@@ -53,6 +54,10 @@ const App = () => {
         <Route 
           path='/counter-app'
           element={<CounterApp/>}
+        />
+        <Route 
+          path='/react-bootstrap'
+          element={<BootstrapUi/>}
         />
       </Routes>
     </BrowserRouter>
