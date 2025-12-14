@@ -33,6 +33,7 @@ import DaisyUi from './pages/DaisyUi';
 import CounterApp from './pages/CounterApp'
 import BootstrapUi from './pages/BootstrapUi';
 import PageNotFound from './components/PageNotFound'
+import OlxCards from './pages/OlxCards';
 
 const App = () => {
   return (
@@ -64,6 +65,10 @@ const App = () => {
         <Route 
           path='/react-bootstrap'
           element={<BootstrapUi/>}
+        />
+        <Route
+          path='/olx-cards'
+          element={<OlxCards />}
         />
       </Routes>
     </BrowserRouter>
