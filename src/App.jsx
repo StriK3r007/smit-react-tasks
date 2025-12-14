@@ -32,6 +32,7 @@ import Turo from './pages/Turo';
 import DaisyUi from './pages/DaisyUi';
 import CounterApp from './pages/CounterApp'
 import BootstrapUi from './pages/BootstrapUi';
+import PageNotFound from './components/PageNotFound'
 
 const App = () => {
   return (
@@ -42,6 +43,11 @@ const App = () => {
           exact
           path="/"
           element={<Home />}
+        /> {/* **CRITICAL FIX:** Replaced component={Home} with element={<Home />} */}
+        <Route
+          exact
+          path="*"
+          element={<PageNotFound />}
         /> {/* **CRITICAL FIX:** Replaced component={Home} with element={<Home />} */}
         <Route
           path="/turo-clone"

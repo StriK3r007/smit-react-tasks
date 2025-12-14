@@ -1,5 +1,12 @@
 const projectLinks = [
     {
+        id: 0,
+        name: '404',
+        path: '*',
+        description: '',
+        icon: '', 
+    },
+    {
         id: 1,
         name: 'Home',
         path: '/',

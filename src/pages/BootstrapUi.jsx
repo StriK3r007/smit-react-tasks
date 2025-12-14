@@ -1,4 +1,5 @@
 import Placeholder from 'react-bootstrap/Placeholder';
+// import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from "react"
 
 import Card from 'react-bootstrap/Card';
@@ -39,7 +40,7 @@ export default function BootstrapUi() {
                             {
                                 loading ? (
                                     <Placeholder as="div" animation="glow">
-                                        <Placeholder xs={12} className='w-30 h-30' />
+                                        <Placeholder xs={12} className='w-25 h-25' />
                                     </Placeholder>
                                 ) : (
                                     <Card.Img variant="top" src={data?.avatar_url} className='rounded-full w-30 h-30' />

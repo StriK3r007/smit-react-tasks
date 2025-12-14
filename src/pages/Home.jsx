@@ -8,7 +8,7 @@ export default function Turo() {
 
     // Component for a single project card
     const ProjectCard = ({ item, isActive }) => (
-      item.name == 'Home' ? null :(
+      item.name === 'Home' || item.name === '404'  ? null :(
         // FIX: The entire card (the outer div) is now wrapped in the <Link> component.
         <Link
             to={item.path}
