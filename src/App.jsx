@@ -26,6 +26,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home'
 import Header from './components/Header';
+import ScrollToTop from './components/ScrollToTop';
 
 // Assignments
 import Turo from './pages/Turo';
@@ -37,23 +38,24 @@ import OlxCards from './pages/OlxCards';
 
 const App = () => {
   return (
-    <BrowserRouter> {/* Renamed from <Router> */}
-      <Header /> {/* This is correctly outside the Routes block */}
-      <Routes> {/* **CRITICAL FIX:** Replaced <Switch> with <Routes> */}
+    <BrowserRouter>
+      <Header />
+      <ScrollToTop/>
+      <Routes>
         <Route
           exact
           path="/"
           element={<Home />}
-        /> {/* **CRITICAL FIX:** Replaced component={Home} with element={<Home />} */}
+        />
         <Route
           exact
           path="*"
           element={<PageNotFound />}
-        /> {/* **CRITICAL FIX:** Replaced component={Home} with element={<Home />} */}
+        />
         <Route
           path="/turo-clone"
           element={<Turo />}
-        /> {/* **CRITICAL FIX:** Replaced component={Turo} with element={<Turo />} */}
+        />
         <Route
           path='/daisy-ui'
           element={<DaisyUi/>}
