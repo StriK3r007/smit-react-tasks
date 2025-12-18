@@ -35,12 +35,18 @@ import CounterApp from './pages/CounterApp'
 import BootstrapUi from './pages/BootstrapUi';
 import PageNotFound from './components/PageNotFound'
 import OlxCards from './pages/OlxCards';
+import TodoApp from './pages/TodoApp';
+import { Toaster } from 'react-hot-toast';
 
 const App = () => {
   return (
     <BrowserRouter>
       <Header />
       <ScrollToTop/>
+      <Toaster
+        position="top-center"
+        reverseOrder={true}
+      />
       <Routes>
         <Route
           exact
@@ -71,6 +77,10 @@ const App = () => {
         <Route
           path='/olx-cards'
           element={<OlxCards />}
+        />
+        <Route
+          path='/todo-app'
+          element={<TodoApp />}
         />
       </Routes>
     </BrowserRouter>
