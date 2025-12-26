@@ -26,7 +26,22 @@ export default function BootstrapUi() {
             })
     }, [])
 
-    if (error) return <h1 className="text-red-600 text-center">Failed to load user.</h1>
+    // Render skeleton loader or error message if needed
+    if (loading) {
+        return (
+            <div className='flex justify-center items-center min-h-screen'>
+                <span className="loading loading-infinity loading-xl"></span>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className='flex justify-center items-center min-h-screen'>
+                <p className='text-red-500'>{error}</p>
+            </div>
+        );
+    }
 
     return (
         <>
