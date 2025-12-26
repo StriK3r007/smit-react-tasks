@@ -12,10 +12,6 @@ export default function TodoApp() {
 
     const handleChange = (event) => {
         const { name, value } = event.target; 
-        // const value = event.target.value
-        // const name = event.target.title
-        // const description = event.target.description
-
         setTodoData({ ...todoData, [name]: value})
     }
 
