@@ -37,6 +37,7 @@ import PageNotFound from './components/PageNotFound'
 import OlxCards from './pages/OlxCards';
 import TodoApp from './pages/TodoApp';
 import { Toaster } from 'react-hot-toast';
+import ApiCall from './pages/ApiCall';
 
 const App = () => {
   return (
@@ -81,6 +82,10 @@ const App = () => {
         <Route
           path='/todo-app'
           element={<TodoApp />}
+        />
+        <Route
+          path='api-call'
+          element={<ApiCall/>}
         />
       </Routes>
     </BrowserRouter>
