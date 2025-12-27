@@ -1,33 +1,81 @@
 import Placeholder from 'react-bootstrap/Placeholder';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { useEffect, useState } from "react"
-
+import toast from "react-hot-toast";
 import Card from 'react-bootstrap/Card';
 
 export default function BootstrapUi() {
     const [loading, setLoading] = useState(true)
-    const [error, setError] = useState(false)
-    const [userName, setUserName] = useState('strik3r007')
+    const [error, setError] = useState('')
     const [data, setData] = useState(null)
+    const [userName, setUserName] = useState('strik3r007')
+
+    const handleChange = (event) => {
+        setUserName(event.target.value)
+    }
+
+    const handleSubmit = (event) => {
+        event.preventDefault()
+
+        if (!userName.trim()) {
+            toast.error('Please enter github username!')
+            return;
+        }
+        // setUserName({...userName, [name]: value});
+        // toast.success('Todo created successfuly')
+
+        fetchUser(userName)
+        // setUserName(''); // Reset form
+    }
+
+    const fetchUser = async (name) => {
+        try {
+            setLoading(true);
+            setError('');
+
+            const response = await fetch(`https://api.github.com/users/${name}`, {
+                headers: {
+                'Accept': 'application/vnd.github+json',
+                'User-Agent': 'react-app',
+                },
+            });
+            // if (!response.ok) throw new Error('User not found');
+            if (response.status === 404) throw new Error('User not found');
+            if (response.status === 403) throw new Error('GitHub API rate limit exceeded. Try again later.');
+            if (!response.ok) throw new Error('Something went wrong.');
+
+            const result = await response.json();
+            setData(result);
+        } catch (err) {
+            setError(err.message);
+            toast.error(err.message);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     useEffect(() => {
-        fetch(`https://api.github.com/users/${userName}`)
-            .then(response => response.json())
-            .then(res => {
-                console.log(res)
-                setData(res)
-            })
-            .catch((err) => {
-                console.log(err)
-                setError(true)
-            })
-            .finally(() => {
-                setLoading(false)
-            })
+        fetchUser(userName)
     }, [])
 
+    // useEffect(() => {
+    //     fetch(`https://api.github.com/users/${userName.userName}`)
+    //         .then(response => response.json())
+    //         .then(res => {
+    //             console.log(res)
+    //             setData(res)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err)
+    //             setError(true)
+    //         })
+    //         .finally(() => {
+    //             setLoading(false)
+    //         })
+    // }, [])
+
     // Render skeleton loader or error message if needed
-    if (loading) {
+    if (loading && !data) {
         return (
             <div className='flex justify-center items-center min-h-screen'>
                 <span className="loading loading-infinity loading-xl"></span>
@@ -35,7 +83,7 @@ export default function BootstrapUi() {
         );
     }
 
-    if (error) {
+    if (error && !data) {
         return (
             <div className='flex justify-center items-center min-h-screen'>
                 <p className='text-red-500'>{error}</p>
@@ -49,6 +97,19 @@ export default function BootstrapUi() {
                 <div className="text-center text-3xl font-extrabold text-gray-900">
                     <h1>React Bootstrap</h1>
                 </div>
+                <form className='flex items-center justify-center gap-2' onSubmit={handleSubmit}>
+                    <input
+                        type='text'
+                        value={userName}
+                        onChange={handleChange}
+                        placeholder='Enter github username'
+                        className='input-neutral border-2 w-100 p-2 rounded-field'
+                    />
+                    <input
+                        type='submit'
+                        className='btn btn-primary'
+                    />
+                </form>
                 <div className='flex justify-center'>
                     <Card className='mt-10 w-full max-w-100'>
                         <div className='flex justify-center'>
