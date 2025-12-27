@@ -38,6 +38,7 @@ import OlxCards from './pages/OlxCards';
 import TodoApp from './pages/TodoApp';
 import { Toaster } from 'react-hot-toast';
 import ApiCall from './pages/ApiCall';
+import QuizApp from './pages/QuizApp';
 
 const App = () => {
   return (
@@ -86,6 +87,10 @@ const App = () => {
         <Route
           path='api-call'
           element={<ApiCall/>}
+        />
+        <Route
+          path='quiz-app'
+          element={<QuizApp/>}
         />
       </Routes>
     </BrowserRouter>
