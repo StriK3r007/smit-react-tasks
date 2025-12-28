@@ -38,7 +38,6 @@ export default function QuizApp() {
                 if (!response.ok) throw new Error('Failed to fetch users')
                 const data = await response.json();
                 setData(data)
-                console.log(data)
             } catch (error) {
                 setError(error.message)
             } finally {
@@ -54,7 +53,6 @@ export default function QuizApp() {
         // console.log(selectedOption.value);
 
         if (selectedOption === data[index].correctAnswer) {
-            console.log(selectedOption.value);
             // Add marks
             setQuestionMarks(prev => prev + 10
                 // selectedOption.value === data[index].correctAnswer ? prev + 10 : prev
@@ -71,6 +69,14 @@ export default function QuizApp() {
         setSelectedOption(null)
     };
 
+    // Quiz restart
+    const restartQuiz = () => {
+        setIndex(0)
+        setQuestionMarks(0)
+        setResult(false)
+        setSelectedOption('')
+    }
+
     // Render skeleton loader or error message if needed
     if (loading) {
         return (
@@ -83,7 +89,7 @@ export default function QuizApp() {
     if (error) {
         return (
             <div className='flex justify-center items-center min-h-screen'>
-                <p className='text-red-500'>{error}</p>
+                <p className='text-red-500'>{error}. Please try refreshing the page.</p>
             </div>
         );
     }
@@ -99,6 +105,12 @@ export default function QuizApp() {
                         <p className="text-xl text-gray-600">
                             Your Score: <span className="font-semibold text-green-600">{questionMarks}</span>
                         </p>
+                        <button
+                            onClick={restartQuiz}
+                            className={'px-6 py-2 rounded-lg font-medium transition bg-green-600 text-white hover:bg-green-700'}
+                        >
+                            Start Again
+                        </button>
                     </div>
                 )}
 
