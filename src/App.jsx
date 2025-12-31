@@ -39,6 +39,7 @@ import TodoApp from './pages/TodoApp';
 import { Toaster } from 'react-hot-toast';
 import ApiCall from './pages/ApiCall';
 import QuizApp from './pages/QuizApp';
+import ExpenseManagementSystem from './pages/ExpenseManagementSystem';
 
 const App = () => {
   return (
@@ -91,6 +92,10 @@ const App = () => {
         <Route
           path='quiz-app'
           element={<QuizApp/>}
+        />
+        <Route
+          path='ems-app'
+          element={<ExpenseManagementSystem/>}
         />
       </Routes>
     </BrowserRouter>

@@ -69,6 +69,13 @@ const projectLinks = [
         description: 'Counter increament and decreament app.',
         icon: '🔢',
     },
+    {
+        id: 10,
+        name: 'Expense Management System',
+        path: '/ems-app',
+        description: 'Expense Management System.',
+        icon: '💳',
+    },
 ];
 
 export default projectLinks
