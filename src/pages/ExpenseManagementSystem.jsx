@@ -19,7 +19,19 @@ export default function ExpenseManagementSystem() {
     const [expense, setExpense] = useState([])
     const [editIndex, setEditIndex] = useState(null);
 
-    
+    const categories = [
+        "Food",
+        "Petrol",
+        "Haircut",
+        "Loan",
+        "Health",
+        "Travel",
+        "Utilites",
+        "Shopping",
+        "Transportation",
+        "Entertainment",
+        "Other Expenses",
+    ];
 
     // handleChange
     const handleChange = (event) => {
@@ -187,11 +199,11 @@ export default function ExpenseManagementSystem() {
                                 className="p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="" disabled>Select a category</option>
-                                <option value="Food">Food</option>
-                                <option value="Transportation">Transportation</option>
-                                <option value="Entertainment">Entertainment</option>
-                                <option value="Utilities">Utilities</option>
-                                <option value="Others">Others</option>
+                                {
+                                    categories.map((category, index) => (
+                                        <option key={index} value={category}>{category}</option>
+                                    ))
+                                }
                             </select>
                         </div>
                     </div>
@@ -235,17 +247,17 @@ export default function ExpenseManagementSystem() {
                                         <td>{item.date}</td>
                                         <td>{item.category}</td>
                                         <td className="flex gap-4">
-                                            <button 
-                                                type="button" 
+                                            <button
+                                                type="button"
                                                 className="text-lg"
                                                 onClick={() => handleEdit(index)}>
-                                                <FiEdit3 className="text-green-300 hover:text-green-500 transition"/>
+                                                <FiEdit3 className="text-green-300 hover:text-green-500 transition" />
                                             </button>
-                                            <button 
-                                                type="button" 
+                                            <button
+                                                type="button"
                                                 className="text-lg"
                                                 onClick={() => handleDelete(index)}>
-                                                <AiOutlineDelete className="text-red-300 hover:text-red-500 transition"/>
+                                                <AiOutlineDelete className="text-red-300 hover:text-red-500 transition" />
                                             </button>
                                         </td>
                                     </tr>
