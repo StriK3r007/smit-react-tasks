@@ -4,15 +4,22 @@ import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
 
 export default function ExpenseManagementSystem() {
+    // Get Current Date
+    const getTodayDate = () => {
+        return new Date().toISOString().split('T')[0];
+    };
+
     const [expenseData, setExpenseData] = useState({
         name: '',
         amount: 0,
         category: '',
-        date: '',
+        date: getTodayDate(),
     });
     const [total, setTotal] = useState()
     const [expense, setExpense] = useState([])
     const [editIndex, setEditIndex] = useState(null);
+
+    
 
     // handleChange
     const handleChange = (event) => {
@@ -73,7 +80,7 @@ export default function ExpenseManagementSystem() {
             name: '',
             amount: '',
             category: '',
-            date: '',
+            date: getTodayDate(),
         }); // Reset form
     }
 
