@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { Card } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
+import Stat from "../components/Stat";
 
 export default function ExpenseManagementSystem() {
     // Get Current Date
@@ -15,9 +17,11 @@ export default function ExpenseManagementSystem() {
         category: '',
         date: getTodayDate(),
     });
-    const [total, setTotal] = useState()
+    const [total, setTotal] = useState(0)
     const [expense, setExpense] = useState([])
     const [editIndex, setEditIndex] = useState(null);
+    // const [latestAmount, setLatestAmount] = useState(0)
+    const [currentMonthExpenses, setCurrentMonthExpenses] = useState(0)
 
     const categories = [
         "Food",
@@ -106,12 +110,23 @@ export default function ExpenseManagementSystem() {
     const handleDelete = (index) => {
         const updatedTodo = expense.filter((_, i) => i !== index); // Remove todo without mutating state
         setExpense(updatedTodo);
-        toast.success('Todo deleted successfuly')
+        toast.success('Expense deleted successfully!')
     }
 
     useEffect(() => {
-        const totalAmount = expense.reduce((acc, item) => acc + item.amount, 0);
+        const totalAmount = expense
+        .reduce((acc, item) => acc + item.amount, 0);
         setTotal(totalAmount);
+
+        // get latest expense
+        // const latestExpense = expense
+        // .filter(item => item.date === getTodayDate())
+        // .sort((a, b) => new Date(b.date) - new Date(a.date))[0]; // Sort by date, descending
+        // setLatestAmount(latestExpense)
+
+        // calculate current month expense
+        const currentMonthExpenses = expense.filter(item => new Date(item.date).getMonth() === new Date().getMonth()).reduce((acc, item) => acc + item.amount, 0);
+        setCurrentMonthExpenses(currentMonthExpenses)
     }, [expense]);
 
     return (
@@ -223,7 +238,11 @@ export default function ExpenseManagementSystem() {
 
             {/* Expense List */}
             {expense && expense.length > 0 ? (
-                <div className="overflow-x-auto mt-5">
+                <div className="overflow-x-auto mt-5 flex justify-content-between">
+                <div className="flex flex-col gap-2">
+                    <Stat name={'Total Expenses'} value={total}/>
+                    {/* <Stat name={'Latest Expense'} value={latestAmount}/> */}
+                </div>
                     <table className="table table-zebra">
                         {/* head */}
                         <thead>
@@ -265,9 +284,13 @@ export default function ExpenseManagementSystem() {
                             }
                         </tbody>
                     </table>
-                    <div className="text-2xl mt-4 space-x-5">
+                    {/* <div className="text-2xl mt-4 space-x-5">
                         <span className="font-bold">Total Expense: </span>
                         <span>Rs. {total}</span>
+                    </div> */}
+                    <div className="flex flex-col gap-2">
+                    <Stat name={'Current Month Expenses'} value={currentMonthExpenses}/>
+
                     </div>
                 </div>
 
