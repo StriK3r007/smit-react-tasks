@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Card } from "react-bootstrap";
 import toast from "react-hot-toast";
 import { AiOutlineDelete } from "react-icons/ai";
 import { FiEdit3 } from "react-icons/fi";
@@ -11,17 +10,30 @@ export default function ExpenseManagementSystem() {
         return new Date().toISOString().split('T')[0];
     };
 
+    // data states
     const [expenseData, setExpenseData] = useState({
         name: '',
-        amount: 0,
+        amount: '',
         category: '',
         date: getTodayDate(),
     });
+
+
+    // Does not save expense data in local storage
+    // const [expense, setExpense] = useState([])
+
+    // this code saves the expense data in local storage,
+    const [expense, setExpense] = useState(() => {
+        const savedExpenses = localStorage.getItem("expenses_data");
+        return savedExpenses ? JSON.parse(savedExpenses) : [];
+    });
     const [total, setTotal] = useState(0)
-    const [expense, setExpense] = useState([])
     const [editIndex, setEditIndex] = useState(null);
     // const [latestAmount, setLatestAmount] = useState(0)
     const [currentMonthExpenses, setCurrentMonthExpenses] = useState(0)
+    const [filterType, setFilterType] = useState('');
+    const [filterValue, setFilterValue] = useState('');
+
 
     const categories = [
         "Food",
@@ -37,19 +49,20 @@ export default function ExpenseManagementSystem() {
         "Other Expenses",
     ];
 
-    // handleChange
+    // * handleChange
     const handleChange = (event) => {
         const { name, value } = event.target;
-        setExpenseData({ ...expenseData, [name]: value })
+        // setExpenseData({ ...expenseData, [name]: value })
+        setExpenseData(prev => ({ ...prev, [name]: value }));
     }
 
-    // handleSubmit
+    // * handleSubmit
     const handleSubmit = (event) => {
         event.preventDefault()
 
         if (
             !expenseData.name.trim() ||
-            !expenseData.amount.trim() ||
+            !expenseData.amount ||
             !expenseData.category.trim() ||
             !expenseData.date.trim()
         ) {
@@ -57,8 +70,14 @@ export default function ExpenseManagementSystem() {
             return;
         }
 
-        if (expenseData.amount <= 0) {
-            toast.error("Amount must not be zero");
+        // if (expenseData.amount <= 0) {
+        //     toast.error("Amount must not be zero");
+        //     return;
+        // }
+
+        const numAmount = parseFloat(expenseData.amount);
+        if (isNaN(numAmount) || numAmount <= 0) {
+            toast.error("Please enter a valid amount");
             return;
         }
 
@@ -77,7 +96,8 @@ export default function ExpenseManagementSystem() {
         //     setEditIndex(null);
         // }
 
-        const newExpense = { ...expenseData, amount: parseFloat(expenseData.amount) };
+        // const newExpense = { ...expenseData, amount: parseFloat(expenseData.amount) };
+        const newExpense = { ...expenseData, amount: numAmount };
 
         if (editIndex === null) {
             // Add new expense
@@ -88,25 +108,27 @@ export default function ExpenseManagementSystem() {
             const updatedExpenses = [...expense];
             updatedExpenses[editIndex] = newExpense;
             setExpense(updatedExpenses);
-            toast.success('Expense updated successfully');
             setEditIndex(null);
+            toast.success('Expense updated successfully');
         }
 
+        // reset form
         setExpenseData({
             name: '',
             amount: '',
             category: '',
             date: getTodayDate(),
-        }); // Reset form
+        });
     }
 
-    // handleEdit
+    // * handleEdit
     const handleEdit = (index) => {
         setEditIndex(index);
         setExpenseData(expense[index]); // Populate form fields with the selected todo item
+        window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // handleDelete
+    // * handleDelete
     const handleDelete = (index) => {
         const updatedTodo = expense.filter((_, i) => i !== index); // Remove todo without mutating state
         setExpense(updatedTodo);
@@ -114,9 +136,20 @@ export default function ExpenseManagementSystem() {
     }
 
     useEffect(() => {
+        localStorage.setItem("expenses_data", JSON.stringify(expense));
+
         const totalAmount = expense
-        .reduce((acc, item) => acc + item.amount, 0);
+            .reduce((acc, item) => acc + item.amount, 0);
         setTotal(totalAmount);
+
+        const currentMonth = new Date().getMonth()
+        const currentYear = new Date().getFullYear()
+        const monthTotal = expense.filter(item => {
+            const d = new Date(item.date)
+            return d.getMonth() === currentMonth && d.getFullYear() === currentYear
+        }).reduce((acc, item) => acc + item.amount, 0)
+
+        setCurrentMonthExpenses(monthTotal)
 
         // get latest expense
         // const latestExpense = expense
@@ -125,22 +158,29 @@ export default function ExpenseManagementSystem() {
         // setLatestAmount(latestExpense)
 
         // calculate current month expense
-        const currentMonthExpenses = expense.filter(item => new Date(item.date).getMonth() === new Date().getMonth()).reduce((acc, item) => acc + item.amount, 0);
-        setCurrentMonthExpenses(currentMonthExpenses)
+        // const currentMonthExpenses = expense.filter(item => new Date(item.date).getMonth() === new Date().getMonth()).reduce((acc, item) => acc + item.amount, 0);
+        // setCurrentMonthExpenses(currentMonthExpenses)
     }, [expense]);
 
+    // filter
+    const filteredExpenses = expense.map((item, originalIndex) => ({ ...item, originalIndex }))
+        .filter(item => {
+            if (!filterType || !filterValue) return true;
+            return item[filterType] === filterValue;
+        });
+
     return (
-        <section className="max-w-[1184px] mx-auto pt-12 px-6 sm:px-8 lg:px-12">
+        <section className="max-w-[1184px] mx-auto pt-12 px-6">
             <div className="text-center text-4xl font-extrabold text-gray-900 mb-8">
                 <h1>Expense Management System</h1>
             </div>
 
-            {/* Expense Input Form */}
-            <div className="bg-white shadow-xl rounded-xl p-8 space-y-6">
+            {/* Expense Input Form Start */}
+            <div className="bg-white shadow-xl rounded-xl p-8 space-y-6 mb-10">
                 <form className="space-y-6" onSubmit={handleSubmit}>
                     {/* Name and Amount Input */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-3">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div className="flex flex-col gap-2">
                             <label
                                 htmlFor="name"
                                 className="text-lg font-medium text-gray-700"
@@ -160,7 +200,7 @@ export default function ExpenseManagementSystem() {
                             />
                         </div>
 
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <label
                                 htmlFor="amount"
                                 className="text-lg font-medium text-gray-700"
@@ -182,7 +222,7 @@ export default function ExpenseManagementSystem() {
 
                     {/* Date and Category Inputs */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <label
                                 htmlFor="date"
                                 className="text-lg font-medium text-gray-700"
@@ -199,7 +239,7 @@ export default function ExpenseManagementSystem() {
                             />
                         </div>
 
-                        <div className="flex flex-col gap-3">
+                        <div className="flex flex-col gap-2">
                             <label
                                 htmlFor="category"
                                 className="text-lg font-medium text-gray-700"
@@ -228,55 +268,80 @@ export default function ExpenseManagementSystem() {
                         <input
                             type="submit"
                             // Dynamically change button text
-                            value={editIndex === null ? "Add Expense" : "Update Expense"}
+                            value={editIndex !== null ? "Update Expense" : "Add Expense"}
                             // Disable if fields are empty
                             // disabled={!todoData.title.trim() || !todoData.description.trim()}  
-                            className="px-6 py-3 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition duration-300 cursor-pointer" />
+                            className="btn btn-primary w-full text-[1.1rem]" />
                     </div>
                 </form>
             </div>
+            {/* Expense Input Form End */}
 
-            {/* Expense List */}
+            {/* Stat Start */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
+                <Stat name={'Total Expenses'} value={total} />
+                <Stat name={'Current Month Expenses'} value={currentMonthExpenses} />
+                {/* <Stat name={'Latest Expense'} value={latestAmount}/> */}
+            </div>
+            {/* Stat End */}
+
+            {/* Filter Controls Start */}
+            <div className="flex flex-wrap items-center justify-end gap-3 mb-4 bg-gray-50 p-4 rounded-lg">
+                <span className="font-bold">Filter:</span>
+                <select value={filterType} onChange={(e) => { setFilterType(e.target.value); setFilterValue(''); }} className="p-2 border rounded">
+                    <option value="">No Filter</option>
+                    <option value="date">By Date</option>
+                    <option value="category">By Category</option>
+                </select>
+
+                {filterType === 'date' && <input type="date" value={filterValue} onChange={(e) => setFilterValue(e.target.value)} className="p-2 border rounded" />}
+                {filterType === 'category' && (
+                    <select value={filterValue} onChange={(e) => setFilterValue(e.target.value)} className="p-2 border rounded">
+                        <option value="">All Categories</option>
+                        {categories.map(c => <option key={c} value={c}>{c}</option>)}
+                    </select>
+                )}
+                {filterValue && <button onClick={() => { setFilterType(''); setFilterValue('') }} className="text-sm text-red-500">Clear</button>}
+            </div>
+            {/* Filter Controls End */}
+
+            {/* Expense List  Start*/}
             {expense && expense.length > 0 ? (
-                <div className="overflow-x-auto mt-5 flex justify-content-between">
-                <div className="flex flex-col gap-2">
-                    <Stat name={'Total Expenses'} value={total}/>
-                    {/* <Stat name={'Latest Expense'} value={latestAmount}/> */}
-                </div>
+                <div className="overflow-x-auto mt-5 flex flex-col gap-4">
+
                     <table className="table table-zebra">
                         {/* head */}
                         <thead>
-                            <tr>
-                                <th></th>
-                                <th>Expense Name</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                                <th>Category</th>
-                                <th>Actions</th>
+                            <tr className="bg-gray-300">
+                                <th className="p-3"></th>
+                                <th className="p-3">Expense Name</th>
+                                <th className="p-3">Amount</th>
+                                <th className="p-3">Date</th>
+                                <th className="p-3">Category</th>
+                                <th className="p-3">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {/* row 1 */}
                             {
-                                expense.map((item, index) => (
-                                    <tr key={index} className="hover:bg-base-200">
-                                        <th>{index + 1}</th>
-                                        <td>{item.name}</td>
-                                        <td>Rs. {item.amount}</td>
-                                        <td>{item.date}</td>
-                                        <td>{item.category}</td>
-                                        <td className="flex gap-4">
+                                filteredExpenses.map((item, index) => (
+                                    <tr key={index} className="hover:bg-gray-50">
+                                        <th className="p-3">{index + 1}</th>
+                                        <td className="p-3">{item.name}</td>
+                                        <td className="p-3">Rs. {item.amount}</td>
+                                        <td className="p-3">{item.date}</td>
+                                        <td className="p-3">{item.category}</td>
+                                        <td className="p-3 flex gap-4">
                                             <button
                                                 type="button"
                                                 className="text-lg"
                                                 onClick={() => handleEdit(index)}>
-                                                <FiEdit3 className="text-green-300 hover:text-green-500 transition" />
+                                                <FiEdit3 className="text-green-500 hover:text-green-600 cursor-pointer transition" />
                                             </button>
                                             <button
                                                 type="button"
                                                 className="text-lg"
                                                 onClick={() => handleDelete(index)}>
-                                                <AiOutlineDelete className="text-red-300 hover:text-red-500 transition" />
+                                                <AiOutlineDelete className="text-red-500 hover:text-red-600 cursor-pointer transition" />
                                             </button>
                                         </td>
                                     </tr>
@@ -284,22 +349,14 @@ export default function ExpenseManagementSystem() {
                             }
                         </tbody>
                     </table>
-                    {/* <div className="text-2xl mt-4 space-x-5">
-                        <span className="font-bold">Total Expense: </span>
-                        <span>Rs. {total}</span>
-                    </div> */}
-                    <div className="flex flex-col gap-2">
-                    <Stat name={'Current Month Expenses'} value={currentMonthExpenses}/>
-
-                    </div>
                 </div>
-
             ) : (
                 <div className="flex justify-center items-center mt-5">
                     <span >No Expenses Found</span>
                 </div>
             )
             }
+            {/* Expense List  End*/}
 
         </section>
     );
