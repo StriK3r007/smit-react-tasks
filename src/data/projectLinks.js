@@ -76,6 +76,13 @@ const projectLinks = [
         description: 'Expense Management System.',
         icon: '💳',
     },
+    {
+        id: 11,
+        name: 'Product App Using Redux',
+        path: '/product-redux',
+        description: 'Product App Using Redux.',
+        icon: '🛍️',
+    },
 ];
 
 export default projectLinks

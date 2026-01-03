@@ -40,6 +40,7 @@ import { Toaster } from 'react-hot-toast';
 import ApiCall from './pages/ApiCall';
 import QuizApp from './pages/QuizApp';
 import ExpenseManagementSystem from './pages/ExpenseManagementSystem';
+import ProductAppRedux from './pages/ProductAppRedux';
 
 const App = () => {
   return (
@@ -96,6 +97,10 @@ const App = () => {
         <Route
           path='ems-app'
           element={<ExpenseManagementSystem/>}
+        />
+        <Route
+          path='product-redux'
+          element={<ProductAppRedux/>}
         />
       </Routes>
     </BrowserRouter>
