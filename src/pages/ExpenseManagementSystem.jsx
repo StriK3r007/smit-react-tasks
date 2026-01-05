@@ -129,11 +129,74 @@ export default function ExpenseManagementSystem() {
     }
 
     // * handleDelete
+    // const handleDelete = (index) => {
+    //     if (editIndex === null) {
+    //         toast((t) => (
+    //             <span>
+    //                 Are you sure you want to <b>Delete</b>?
+    //                 <button onClick={() => toast.success(t.id)}>
+    //                     Yes
+    //                 </button>
+    //             </span>
+    //         ));
+    //         const updatedTodo = expense.filter((_, i) => i !== index); // Remove todo without mutating state
+    //         setExpense(updatedTodo);
+    //         toast.success('Expense deleted successfully!')
+    //         return
+    //     }
+    //     toast.error('Deletion is not possible while in edit mode.')
+    // }
+
     const handleDelete = (index) => {
-        const updatedTodo = expense.filter((_, i) => i !== index); // Remove todo without mutating state
-        setExpense(updatedTodo);
-        toast.success('Expense deleted successfully!')
-    }
+        if (editIndex === null) {
+            toast((t) => (
+                <span className="flex items-center gap-2">
+                    <span>
+                        Are you sure you want to <b>Delete</b>?
+                    </span>
+                    <button
+                        onClick={() => {
+                            const updatedTodo = expense.filter((_, i) => i !== index); // Remove expense without mutating state
+                            setExpense(updatedTodo);
+                            toast.success('Expense deleted successfully!');
+                            toast.dismiss(t.id); // Close the confirmation toast
+                        }}
+                        className="btn btn-success"
+                    >
+                        Yes
+                    </button>
+                </span>
+            ));
+        } else {
+            toast.error('Deletion is not possible while in edit mode.');
+        }
+    };
+
+    // * handleDeleteAll
+    const handleDeleteAll = () => {
+        if (editIndex === null) {
+            toast((t) => (
+                <span className="flex items-center gap-2">
+                    <span>
+                        Are you sure you want to <b>Delete</b> all expenses?
+                    </span>
+                    <button
+                        onClick={() => {
+                            setExpense([]);
+                            toast.success('All expense deleted successfully!');
+                            toast.dismiss(t.id); // Close the confirmation toast
+                        }}
+                        className="btn btn-success"
+                    >
+                        Yes
+                    </button>
+                </span>
+            ));
+        } else {
+            toast.error('Deletion is not possible while in edit mode.');
+        }
+    };
+
 
     useEffect(() => {
         localStorage.setItem("expenses_data", JSON.stringify(expense));
@@ -319,6 +382,14 @@ export default function ExpenseManagementSystem() {
                                 <th className="p-3">Date</th>
                                 <th className="p-3">Category</th>
                                 <th className="p-3">Actions</th>
+                                <td className="px-0">
+                                    <button
+                                        type="button"
+                                        className="font-bold text-red-500 hover:text-red-700 cursor-pointer transition"
+                                        onClick={handleDeleteAll}>
+                                        Delete All
+                                    </button>
+                                </td>
                             </tr>
                         </thead>
                         <tbody>
@@ -330,19 +401,21 @@ export default function ExpenseManagementSystem() {
                                         <td className="p-3">Rs. {item.amount}</td>
                                         <td className="p-3">{item.date}</td>
                                         <td className="p-3">{item.category}</td>
-                                        <td className="p-3 flex gap-4">
-                                            <button
-                                                type="button"
-                                                className="text-lg"
-                                                onClick={() => handleEdit(index)}>
-                                                <FiEdit3 className="text-green-500 hover:text-green-600 cursor-pointer transition" />
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="text-lg"
-                                                onClick={() => handleDelete(index)}>
-                                                <AiOutlineDelete className="text-red-500 hover:text-red-600 cursor-pointer transition" />
-                                            </button>
+                                        <td className="p-3 flex justify-between">
+                                            <span className="flex gap-2">
+                                                <button
+                                                    type="button"
+                                                    className="text-lg"
+                                                    onClick={() => handleEdit(index)}>
+                                                    <FiEdit3 className="text-green-500 hover:text-green-600 cursor-pointer transition" />
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    className="text-lg"
+                                                    onClick={() => handleDelete(index)}>
+                                                    <AiOutlineDelete className="text-red-500 hover:text-red-600 cursor-pointer transition" />
+                                                </button>
+                                            </span>
                                         </td>
                                     </tr>
                                 ))
