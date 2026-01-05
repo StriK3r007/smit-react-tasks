@@ -169,6 +169,7 @@ export default function ExpenseManagementSystem() {
                 </span>
             ));
         } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             toast.error('Deletion is not possible while in edit mode.');
         }
     };
@@ -194,6 +195,7 @@ export default function ExpenseManagementSystem() {
                 </span>
             ));
         } else {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             toast.error('Deletion is not possible while in edit mode.');
         }
     };
@@ -415,13 +417,15 @@ export default function ExpenseManagementSystem() {
                                             <span className="flex gap-2">
                                                 <button
                                                     type="button"
-                                                    className="text-lg"
+                                                    className="text-lg tooltip"
+                                                    data-tip="Edit"
                                                     onClick={() => handleEdit(index)}>
                                                     <FiEdit3 className="text-green-500 hover:text-green-600 cursor-pointer transition" />
                                                 </button>
                                                 <button
                                                     type="button"
-                                                    className="text-lg"
+                                                    className="text-lg tooltip"
+                                                    data-tip="Delete"
                                                     onClick={() => handleDelete(index)}>
                                                     <AiOutlineDelete className="text-red-500 hover:text-red-600 cursor-pointer transition" />
                                                 </button>

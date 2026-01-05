@@ -41,6 +41,7 @@ import ApiCall from './pages/ApiCall';
 import QuizApp from './pages/QuizApp';
 import ExpenseManagementSystem from './pages/ExpenseManagementSystem';
 import ProductAppRedux from './pages/ProductAppRedux';
+import Footer from './components/Footer';
 
 const App = () => {
   return (
@@ -50,7 +51,7 @@ const App = () => {
       <Toaster
         position="top-center"
         reverseOrder={true}
-      />
+      /> 
       <Routes>
         <Route
           exact
@@ -103,6 +104,7 @@ const App = () => {
           element={<ProductAppRedux/>}
         />
       </Routes>
+      <Footer/>
     </BrowserRouter>
   );
 };

@@ -43,7 +43,7 @@ export default function ScrollToTop() {
             {/* Scroll to top button */}
             {isVisible && (
                 <div
-                    className="fixed bottom-10 right-10 z-50 bg-gray-900 h-15 w-15 rounded-full flex justify-center items-center cursor-pointer shadow transition"
+                    className="fixed bottom-10 right-0 z-50 bg-gray-900 h-15 w-15 flex justify-center items-center cursor-pointer shadow transition rounded-tl-full rounded-bl-full"
                     onClick={topFunction}
                 >
                 <FaArrowUpLong className='text-white'/>

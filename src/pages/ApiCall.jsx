@@ -42,7 +42,7 @@ export default function ApiCall() {
     }
 
     return (
-        <section className='full max-w-[1184px] mx-auto pt-10 px-4 sm:px-6 lg:px-8'>
+        <section className='full max-w-[1184px] min-h-screen mx-auto pt-10 px-4 sm:px-6 lg:px-8'>
             <div className="overflow-x-auto">
             {
                 users && users.length > 0 ? (

@@ -14,7 +14,7 @@ export default function CounterApp() {
     }
     return (
         <>
-            <section className="w-full max-w-[1184px] mx-auto pt-10 px-4 sm:px-6 lg:px-8 space-y-10">
+            <section className="w-full max-w-[1184px] min-h-screen mx-auto pt-10 px-4 sm:px-6 lg:px-8 space-y-10">
                 <div className="text-center text-3xl font-extrabold text-gray-900">
                     <h1>Counter App</h1>
                 </div>

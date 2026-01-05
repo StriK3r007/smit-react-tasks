@@ -62,7 +62,7 @@ export default function Turo() {
     );
 
     return (
-        <section className='w-full max-w-[1184px] mx-auto pt-10 px-4 sm:px-6 lg:px-8'>
+        <section className='w-full max-w-[1184px] min-h-screen mx-auto pt-10 px-4 sm:px-6 lg:px-8'>
             <h1 className='text-3xl font-extrabold text-gray-900 dark:text-white mb-8'>
                 Projects & Features
             </h1>
