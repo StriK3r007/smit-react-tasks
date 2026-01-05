@@ -104,7 +104,7 @@ const ProductCard = ({ title, imgSrc, desc, price, category, AddToCart, index })
                                 src={item}
                                 alt={`Image of ${title}`}
                                 loading="lazy"
-                                className='w-20 lg:w-24 md:w-22'
+                                className={`w-20 lg:w-24 md:w-22 ${productImage === item && ('border-b-2 border-amber-300 transition') }`}
                                 onClick={() => setProductImage(imgSrc[index])}
                             />
                         ))
