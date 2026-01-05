@@ -31,6 +31,7 @@ export default function ExpenseManagementSystem() {
     const [editIndex, setEditIndex] = useState(null);
     // const [latestAmount, setLatestAmount] = useState(0)
     const [currentMonthExpenses, setCurrentMonthExpenses] = useState(0)
+    const [currentDayExpenses, setCurrentDayExpenses] = useState(0)
     const [filterType, setFilterType] = useState('');
     const [filterValue, setFilterValue] = useState('');
 
@@ -206,13 +207,21 @@ export default function ExpenseManagementSystem() {
         setTotal(totalAmount);
 
         const currentMonth = new Date().getMonth()
+        const currentDay = new Date().getDate()
         const currentYear = new Date().getFullYear()
+
         const monthTotal = expense.filter(item => {
             const d = new Date(item.date)
             return d.getMonth() === currentMonth && d.getFullYear() === currentYear
         }).reduce((acc, item) => acc + item.amount, 0)
 
+        const dayTotal = expense.filter(item => {
+            const d = new Date(item.date)
+            return d.getDate() === currentDay && d.getMonth() === currentMonth && d.getFullYear() === currentYear
+        }).reduce((acc, item) => acc + item.amount, 0)
+
         setCurrentMonthExpenses(monthTotal)
+        setCurrentDayExpenses(dayTotal)
 
         // get latest expense
         // const latestExpense = expense
@@ -343,6 +352,7 @@ export default function ExpenseManagementSystem() {
             {/* Stat Start */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-6">
                 <Stat name={'Total Expenses'} value={total} />
+                <Stat name={"Today's Expenses"} value={currentDayExpenses} />
                 <Stat name={'Current Month Expenses'} value={currentMonthExpenses} />
                 {/* <Stat name={'Latest Expense'} value={latestAmount}/> */}
             </div>
