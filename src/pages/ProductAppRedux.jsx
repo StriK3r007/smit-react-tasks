@@ -89,10 +89,11 @@ export default function ProductAppRedux() {
 
 
 const ProductCard = ({ title, imgSrc, desc, price, category, AddToCart, index }) => {
+    const [productImage, setProductImage] = useState(imgSrc?.[0])
     return (
         <div className="card bg-base-100 w-80 lg:w-96 md:w-96 shadow hover:shadow-lg cursor-pointer">
             <figure className="bg-gray-100">
-                <img src={imgSrc?.[0] || 'https://via.placeholder.com/150'} alt={title} loading="lazy" />
+                <img src={productImage || 'https://via.placeholder.com/150'} alt={title} loading="lazy" />
             </figure>
             <div className="card-body bg-gray-500">
                 <div className="flex gap-4 items-center justify-center">
@@ -104,6 +105,7 @@ const ProductCard = ({ title, imgSrc, desc, price, category, AddToCart, index })
                                 alt={`Image of ${title}`}
                                 loading="lazy"
                                 className='w-20 lg:w-24 md:w-22'
+                                onClick={() => setProductImage(imgSrc[index])}
                             />
                         ))
                     ) : (
